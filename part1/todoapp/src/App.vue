@@ -26,13 +26,29 @@ export default {
     },
     methods: {
         addTask() {
-            this.tasks.push({ task: this.task, isChecked: false });
+            const newTask = { task: this.task, isChecked: false };
+            this.tasks.push(newTask);
             this.task = '';
+
+            this.saveTasksToLocalStorage();
         },
         deleteTask(index) {
             this.tasks.splice(index, 1);
-        }
-    }
+            this.saveTasksToLocalStorage();
+        },
+        saveTasksToLocalStorage() {
+            localStorage.setItem('tasks', JSON.stringify(this.tasks));
+        },
+        loadTasksFromLocalStorage() {
+            const savedTasks = localStorage.getItem('tasks');
+            if (savedTasks) {
+                this.tasks = JSON.parse(savedTasks);
+            }
+        },
+    },
+    created() {
+        this.loadTasksFromLocalStorage();
+    },
 }
 </script>
 
